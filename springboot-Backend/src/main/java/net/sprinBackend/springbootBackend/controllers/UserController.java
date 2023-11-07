@@ -4,12 +4,10 @@ import net.sprinBackend.springbootBackend.models.Task;
 import net.sprinBackend.springbootBackend.models.User;
 import net.sprinBackend.springbootBackend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping(path = "/user")
 @RestController
@@ -18,30 +16,41 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/completed")
+    @GetMapping("/task/completed")
     public List<Task> getCompletedTask(){
         return userService.getListOfCompletedTask();
     }
 
-    @PostMapping("/newUser")
-    public String saveUser(User user){
+    @GetMapping("/task/undone")
+    public List<Task> getUndoneTask(){return userService.getListOfUndoneTask();}
+
+    @PostMapping("/adduser")
+    public String saveUser(@RequestBody User user){
         try{
             userService.SaveUser(user);
             return "successfully Registered..";
         }catch (Exception e) {
-            e.printStackTrace();
             return "contact admin";
         }
     }
 
-    @PostMapping("/newTask")
-    public String saveNewTask(Task task){
+    @PostMapping("/addtask")
+    public String saveNewTask(@RequestBody Task task){
         try{
             userService.SaveNewTask(task);
             return "Successfully added";
         }catch (Exception e){
-            e.printStackTrace();
             return "contact N--k__Y";
         }
+    }
+
+    @GetMapping("/alltask")
+    public List<Task> getAllTask(){
+        return userService.getAllTask();
+    }
+
+    @GetMapping("/profile/{id}")
+    public User userProfile(@PathVariable("id") int id){
+        return userService.getProfile(id);
     }
 }

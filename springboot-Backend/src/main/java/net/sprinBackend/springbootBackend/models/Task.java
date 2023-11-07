@@ -23,20 +23,13 @@ public class Task {
             allocationSize = 1
     )
     @GeneratedValue(
-            strategy = GenerationType.IDENTITY,
+            strategy = GenerationType.SEQUENCE,
             generator = "sequence_generator"
     )
     private int taskId;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
     private String description;
-
-    @Column(nullable = false)
     private Date time;
-
     @Value("false")
     private boolean completed;
 

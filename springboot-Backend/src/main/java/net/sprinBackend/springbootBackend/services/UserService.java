@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -27,5 +28,17 @@ public class UserService {
 
     public void SaveNewTask(Task task){
         taskRepository.save(task);
+    }
+
+    public List<Task> getListOfUndoneTask() {
+        return taskRepository.getUndoneTask();
+    }
+
+    public List<Task> getAllTask() {
+        return taskRepository.findAll();
+    }
+
+    public User getProfile(int id) {
+        return userRepository.findById((long) id).get();
     }
 }
