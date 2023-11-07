@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    @Query("SELECT t FROM task t WHERE t.completed = true")
+    @Query("SELECT t FROM Task t WHERE t.completed = true")
     List<Task> getCompletedTask();
 }

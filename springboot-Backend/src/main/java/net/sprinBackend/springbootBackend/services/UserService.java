@@ -1,6 +1,7 @@
 package net.sprinBackend.springbootBackend.services;
 
 import net.sprinBackend.springbootBackend.models.Task;
+import net.sprinBackend.springbootBackend.models.User;
 import net.sprinBackend.springbootBackend.repository.TaskRepository;
 import net.sprinBackend.springbootBackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +19,13 @@ public class UserService {
 
     public List<Task> getListOfCompletedTask(){
         return taskRepository.getCompletedTask();
+    }
+
+    public void SaveUser(User user) {
+        userRepository.save(user);
+    }
+
+    public void SaveNewTask(Task task){
+        taskRepository.save(task);
     }
 }

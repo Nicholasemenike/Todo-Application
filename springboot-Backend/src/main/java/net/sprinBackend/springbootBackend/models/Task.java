@@ -1,14 +1,14 @@
 package net.sprinBackend.springbootBackend.models;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.lang.annotation.Documented;
 import java.util.Date;
 
-import static jakarta.persistence.CascadeType.ALL;
 
 @Entity
 @Data
@@ -26,10 +26,18 @@ public class Task {
             strategy = GenerationType.IDENTITY,
             generator = "sequence_generator"
     )
-    private Long taskId;
+    private int taskId;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
     private Date time;
+
+    @Value("false")
     private boolean completed;
 
     @ManyToOne
