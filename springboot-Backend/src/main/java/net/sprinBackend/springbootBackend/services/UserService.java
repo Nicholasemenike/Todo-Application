@@ -41,4 +41,8 @@ public class UserService {
     public User getProfile(int id) {
         return userRepository.findById((long) id).get();
     }
+
+    public void deleteTask(int id) {
+        taskRepository.deleteById((long) id);
+    }
 }

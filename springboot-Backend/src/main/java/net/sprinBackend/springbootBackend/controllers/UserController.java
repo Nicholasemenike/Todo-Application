@@ -4,6 +4,7 @@ import net.sprinBackend.springbootBackend.models.Task;
 import net.sprinBackend.springbootBackend.models.User;
 import net.sprinBackend.springbootBackend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,5 +53,15 @@ public class UserController {
     @GetMapping("/profile/{id}")
     public User userProfile(@PathVariable("id") int id){
         return userService.getProfile(id);
+    }
+
+    @DeleteMapping("/deletetask/{id}")
+    public String deleteTask(@PathVariable("id") int id){
+        try{
+            userService.deleteTask(id);
+            return "Successfully Deleted";
+        }catch (Exception e){
+            return "Failed!! Contact Nky ";
+        }
     }
 }
