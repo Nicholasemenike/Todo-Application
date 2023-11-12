@@ -31,6 +31,8 @@ public class Task {
     private String description;
     private Date time;
     @Value("false")
+    private boolean important;
+    @Value("false")
     private boolean completed;
 
     @ManyToOne

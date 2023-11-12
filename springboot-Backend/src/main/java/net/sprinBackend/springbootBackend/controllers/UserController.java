@@ -4,16 +4,24 @@ import net.sprinBackend.springbootBackend.models.Task;
 import net.sprinBackend.springbootBackend.models.User;
 import net.sprinBackend.springbootBackend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequestMapping(path = "/user")
 @RestController
+@CrossOrigin
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody User user){
+        return new ResponseEntity<>(userService.registerUser(user), HttpStatus.OK);
+    }
 
     @GetMapping("/task/completed")
     public List<Task> getCompletedTask(){
@@ -46,6 +54,11 @@ public class UserController {
     @GetMapping("/alltask")
     public List<Task> getAllTask(){
         return userService.getAllTask();
+    }
+
+    @GetMapping("/allusers")
+    public ResponseEntity< List<User>>getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/profile/{id}")

@@ -1,5 +1,5 @@
 .sidebar{
-    background: rgb(33, 6, 6);
+    background: #252525;
     width: 30vh;
     height: 95vh;
     border-radius: 50px;
@@ -11,7 +11,7 @@
 }
 .mainbody{
     display: flex;
-    background: rgb(33, 6, 6);
+    background: #252525;
     width: 100%;
     height: 95vh;
     margin: 20px;
@@ -67,10 +67,10 @@ li:hover{
 }
 .card{
     padding: 10px;
-    background: rgba(145, 164, 101, 0.697);
+    background: #050505;
     overflow: hidden;
-    height: 300px;
-    width: 350px;
+    height: 200px;
+    width: 200px;
     border-radius: 50px;
     justify-content: center;
     text-align: center;
@@ -91,34 +91,88 @@ li:hover{
     margin-top: 50%;
     margin-bottom: 50%;
 }
-#emptydiv:hover{
+#emptydiv{
     cursor: pointer;
+    border-style: dotted;
+    border-width: 2px;
+    border-color: aliceblue;
+
+}
+#emptydiv:hover{
     opacity: .6 ;
     transition: .2s;
 }
 form{
+    background-color: #0a0a0a;
     top: 50px;
-    width: 400px;
-    height: 350px;
+    width: 350px;
+    height: 480px;
     padding: 20px;
     border-radius: 20px;
 }
 form input{
     margin-bottom: 10px;
-    height: 50px;
+    height: 40px;
+}
+form textarea{
+    height: 100px;
 }
 form #check{
     justify-content: center;
     margin-bottom: 30px;
     width: 20px;
 }
-#impdiv{
-    margin-top: 20px;
-}
 button{
-    margin-left: 100px;
-    margin-top: 50px;
+    background-color: rgb(133, 111, 220);
+    margin-left: 70px;
+    float: right;
     border-radius: 20px;
-    width: 100px;
+    width: 150px;
     height: 50px;
+    color: white;
+    border-width: 0px;
+}
+button:hover{
+    opacity: .8;
+    transition: .3s;
+}
+#occupied p{
+    font-size: 10px;
+}
+#occupied i{
+    font-size: 13px;
+}
+textarea{
+    resize: none;
+}
+#toptop{
+    display: flex;
+    justify-content: space-between;
+}
+#toptop i{
+ color: red;
+}
+#Register{
+    color: white;
+    background-color: black;
+    height: 500px;
+    width: 400px;
+    border-radius: 20px;
+    border-color: #050505;
+    border-style: dotted;
+    justify-content: center;
+    text-align: center;
+    left: 50%;
+    top: 50%;
+    display: flex;
+}
+#loginForm{
+    color: white;
+}
+#loginForm h1{
+    text-align: center;
+    color: white;
+}
+#registerBtn{
+    background-color: #473434;
 }

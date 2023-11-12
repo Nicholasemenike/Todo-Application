@@ -20,7 +20,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
     private String name;
+    private String email;
+    private Integer number;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.EAGER
+    )
     private List<Task>  tasks;
 }

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -44,5 +43,18 @@ public class UserService {
 
     public void deleteTask(int id) {
         taskRepository.deleteById((long) id);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public String registerUser(User user) {
+        try{
+            userRepository.save(user);
+            return "Registered Successfully";
+        }catch (Exception e){
+            return "Registration Failed";
+        }
     }
 }
