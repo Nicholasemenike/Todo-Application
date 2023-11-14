@@ -21,7 +21,7 @@ public class User {
     private int userId;
     private String name;
     private String email;
-    private Integer number;
+    private String password;
 
     @OneToMany(
             mappedBy = "user",

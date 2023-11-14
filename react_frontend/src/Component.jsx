@@ -18,10 +18,6 @@ const Topdetails = () => {
     return(
         <div className='topdiv d-flex center mt-5 text-center'>
             <img src={img} className="userimage"/>
-            <div className='ms-2'>
-                <text className="username">Emenike</text>
-                <text className="userlastname">Nicholas</text>
-            </div>
         </div>
     );
 }
@@ -44,21 +40,14 @@ const OccupiedCard = () => {
 }
 const NewCard =() => {
     const [showForm, setShowForm] = useState(false);
-    const displayForm =() => {
-        if(showForm){
-            setShowForm(false)
-        }else{
-            setShowForm(true);
-        }
-    }
+    
     return(
-        <div id='emptydiv' className='card' onClick={displayForm}>
-            {showForm && <FormForNewTask/>}
+        <div id='emptydiv' className='card' onClick={() => showForm===true ? setShowForm(false) : setShowForm(true)}>
             <div id='divv' className='card-body text-white d-flex'>
                 <h4 className='card-title'>New Task</h4>
                 <i className='fa fa-plus mt-1 ms-3'></i>
             </div>
-
+            {showForm===true ? (<FormForNewTask/>) : ('')}
         </div>
     );
 }
@@ -66,13 +55,13 @@ const NewCard =() => {
 const Signout = () => {
     return(
             <div className='buttomdiv mb-5'>
-                <text>sign out <i className='fa fa-right-to-bracket'/> </text>
+                <i className='fa fa-right-to-bracket'/>
             </div>
     );
 }
 
 const Menuitems =() => {
-    const [aciveNav, SetActiveNavigation] = useState('all');
+    const [aciveNav, SetActiveNavigation] = useState('home');
     const handleNavOnClick = (navItem) => {
         SetActiveNavigation(navItem)
     }
@@ -81,19 +70,17 @@ const Menuitems =() => {
             <nav>
                 <ul>
                     <li 
-                    className={`text-white mb-2 ${aciveNav === 'home' ? 'active' : ''}`}
+                    className={`mb-2 ${aciveNav === 'home' ? 'active' : ''}`}
                     onClick={() => handleNavOnClick('home')}
                     >
                          <i className='fa fa-home me-2'></i>
-                        All Tasks
                     </li>
                     
                     <li 
-                    className={`text-white mb-2 ${aciveNav === 'important' ? 'active' : ''}`}
+                    className={` mb-2 ${aciveNav === 'important' ? 'active' : ''}`}
                     onClick={() => handleNavOnClick('important')}
                     >
                         <i className='fa fa-check-to-slot me-2'></i>
-                        Important
                     </li>
                     
                     <li 
@@ -101,7 +88,6 @@ const Menuitems =() => {
                     onClick={() => handleNavOnClick('complete')}
                     >
                          <i className='fa fa-check me-2'></i>
-                        Completed
                     </li>
                     
                     <li 
@@ -109,7 +95,6 @@ const Menuitems =() => {
                     onClick={() => handleNavOnClick('donow')}
                     >
                          <i className='fa fa-list-check me-2'></i>
-                        Do It Now
                     </li>
                 </ul>
             </nav>
@@ -118,6 +103,8 @@ const Menuitems =() => {
 }
 
 const Login =() => {
+    const [signin, setSignin] = useState(false)
+    const [signup, setSignup] = useState(true)
     const [form, setForm] = useState({
         name: '',
         email: '',
@@ -127,10 +114,12 @@ const Login =() => {
         setForm({
             ...form,
             [e.target.name]: e.target.value
-            
         });
     };
     const handleSubmit= () => {
+       if(signin){
+
+       }else{
         fetch('http://localhost:8080/user/register', {
             method: 'POST',
             headers: {
@@ -143,33 +132,82 @@ const Login =() => {
             console.log(data);
         })
         .catch(error => console.error('Error: ', error));
+       }
     }
     return(
-        <form id='loginForm'>
-            <h1>Register</h1>
-            <label className='' htmlFor='name'>Name</label>
-            <input id='name' className='form-control' type='text' required onChange={handleChange}></input>
+        <form id='form-box'>
+            <div>
 
-            <label className='' htmlFor='name'>Email</label>
-            <input id='email' className='form-control' type='email ' required onChange={handleChange}></input>
+                <h1 id='title'>{signup===true ? ('Sign Up') : ('Sign In')}</h1>
 
-            <label className='' htmlFor='name'>Number</label>
-            <input id='number' className='form-control' type='number' required onChange={handleChange}></input>
+                <div className='input-field' style={signin===true ? {maxHeight:0} : {}} >
+                    <i className='fa fa-user'></i>
+                    <input id='name' className='' type='text' required={!signin} onChange={handleChange} placeholder='name'></input>
+                </div> 
+                
+                <div className='input-field'>
+                    <i className='fa fa-envelope'></i>
+                    <input id='email' className='' type='email' required onChange={handleChange} placeholder='email'></input>
+                </div>
+                
+                <div className='input-field'>
+                    <i className='fa fa-lock' ></i>
+                    <input id='password' className='' type='password' required onChange={handleChange} placeholder='password'></input>
+                </div>
+                <p className='text-black'>Forgot passcode ? <a href='#'>click here</a> </p>
+            </div>
 
-           <button id='registerBtn' onSubmit={handleSubmit}>Register</button>
+            <div className='btn-field'>
+                <button type='submit' className={`${signup===true ? '' : 'disable'}`}  onClick={
+                    () => {
+                        if(signup){
+                            setSignin(false);
+                            handleSubmit()
+                        }else{
+                            setSignup(true)
+                            setSignin(false)
+                        }}
+                     }>Sign Up</button>
+                <button type='submit' className={`${signin===true ? '' : 'disable'}`} onClick={
+                    () => {
+                        if(signin){
+                            setSignup(false);
+                            handleSubmit()
+                        }else{
+                            setSignin(true)
+                            setSignup(false)
+                        }
+                    }
+                    }>Sign In</button>
+            </div>
+
         </form>
     );
 }
 
 const MainBody= () => {
     return(
-        <div className="mainbody">
+        <div className="mainbody ">
+            
+         
+            {/* <NewCard/>  */}
+            
             <Login/>
         </div>
     );
 };
 
 const FormForNewTask =() => {
+    const [da, setDa] = useState([])
+    const fetchdata = async function(){
+        fetch('http://localhost:8080/user/allusers')
+        .then(response => response.json())
+        .then(data => {
+            setDa(data)
+            console.log(da)
+    })
+        .catch(error => console.error(error))
+        }
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -183,7 +221,7 @@ const FormForNewTask =() => {
             
         });
     };
-    const sendData = () => {
+    const sendData =  ()  =>  {
         fetch('http://localhost:8080/user/addtask', {
             method: 'POST',
             headers: {
@@ -198,13 +236,12 @@ const FormForNewTask =() => {
         .catch(error => console.error('Error: ', error));
     }
     return(
-        <form className='form form-check' >
-            <div className='d-flex' id='toptop'>
-                <h3 className='form-title text-white'>New Task</h3>
-                <i className='fa fa-x' ></i>
+        <form className='form form-check' id='formbox'>
+            <div id='toptop'>
+                <h3 className='form-title text-black'>New Task</h3>
             </div>
             
-            <label className='text-white' htmlFor='name'>Title</label>
+            <label  htmlFor='name'>Title</label>
             <input 
             type='text'  
             id='name' 
@@ -216,7 +253,7 @@ const FormForNewTask =() => {
             required 
             />
 
-            <label htmlFor='description' className='text-white'>Description</label>
+            <label htmlFor='description' >Description</label>
             <textarea 
             id='description' 
             name='description' 
@@ -228,7 +265,7 @@ const FormForNewTask =() => {
             onChange={handleChange}
             />
 
-            <label htmlFor='date' className='text-white'>Date</label>
+            <label htmlFor='date' >Date</label>
             <input 
             id='date' 
             name='date' 
@@ -239,14 +276,19 @@ const FormForNewTask =() => {
             onChange={handleChange}
             />
 
-            <div id='impdiv' className='d-flex float-end'>
-                <label htmlFor='check' text='important' id='imp' className='text-white mt-3' >Important</label>
-                <input className='ms-2 mt-1' id='check' name='important'  type='checkbox' value={formData.important}/>
-            </div>
+            <div id='impdiv'>
+                <div>
+                    <label htmlFor='check' text='important' id='imp' className='text-black' >Important</label>
+                    <input className='ms-2 mt-1' id='check' name='important'  type='checkbox' value={formData.important}/>
+                </div>
+                <div>
+                    <button id='creat' onClick={fetchdata} className='' type='submit'><i className='fa fa-plus'></i> Create task</button>
+                </div>
             
-            <button onClick={sendData} className='' type='submit'><i className='fa fa-plus'></i> Create task</button>
+            </div>
         </form>
     );
 }
 
-export { MainBody, SideNavigation };
+export { FormForNewTask, MainBody, SideNavigation };
+

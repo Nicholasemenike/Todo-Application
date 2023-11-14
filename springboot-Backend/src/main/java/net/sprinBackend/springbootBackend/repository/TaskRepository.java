@@ -1,6 +1,7 @@
 package net.sprinBackend.springbootBackend.repository;
 
 import net.sprinBackend.springbootBackend.models.Task;
+import net.sprinBackend.springbootBackend.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("SELECT t FROM Task t WHERE t.completed = false")
     List<Task> getUndoneTask();
+
+    @Query("SELECT u FROM User u WHERE u.email = ?1")
+    User getUserById(long id);
 }

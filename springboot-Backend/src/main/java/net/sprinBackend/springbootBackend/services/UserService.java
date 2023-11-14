@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -51,10 +53,20 @@ public class UserService {
 
     public String registerUser(User user) {
         try{
+            if(checkUser(user.getUserId())){
+                return "User Already Exist";
+            }
             userRepository.save(user);
             return "Registered Successfully";
         }catch (Exception e){
             return "Registration Failed";
+        }
+    }
+
+    public boolean checkUser(long id) {
+        try{
+            User user = userRepository.findById(id).get();
+            return Objects.nonNull(user);
         }
     }
 }

@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RequestMapping(path = "/user")
 @RestController
-@CrossOrigin
+@CrossOrigin(value = "http://localhost:3000")
 public class UserController {
+
 
     @Autowired
     private UserService userService;
@@ -22,6 +22,24 @@ public class UserController {
     public ResponseEntity<String> registerUser(@RequestBody User user){
         return new ResponseEntity<>(userService.registerUser(user), HttpStatus.OK);
     }
+
+//    @PostMapping("/login")
+//    public ResponseEntity<String> loginUser(@RequestBody User user){
+//        if (checkUser(user.getUserId())){
+//            if(checkLogin(user)){
+//                return new ResponseEntity<>("Successfully login", HttpStatus.OK);
+//            }
+//        }
+//
+//    }
+
+//    public boolean checkUser(long id){
+//        userService.checkUser(id);
+//    }
+
+//    public boolean checkLogin(User user){
+//
+//    }
 
     @GetMapping("/task/completed")
     public List<Task> getCompletedTask(){
