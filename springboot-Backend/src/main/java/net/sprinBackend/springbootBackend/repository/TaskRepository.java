@@ -17,6 +17,4 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("SELECT t FROM Task t WHERE t.completed = false")
     List<Task> getUndoneTask();
 
-    @Query("SELECT u FROM User u WHERE u.email = ?1")
-    User getUserById(long id);
 }

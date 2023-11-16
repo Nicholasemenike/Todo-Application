@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import React, { useState } from "react";
 import './Component.css';
+import { useForm } from './GlobalState';
 import './fontawesome-free-6.4.2-web/css/all.css';
 import img from './img/user.png';
 
@@ -17,7 +18,7 @@ const SideNavigation = () => {
 const Topdetails = () => {
     return(
         <div className='topdiv d-flex center mt-5 text-center'>
-            <img src={img} className="userimage"/>
+            <img src={img} className="userimage" alt='user image'/>
         </div>
     );
 }
@@ -26,78 +27,126 @@ const OccupiedCard = () => {
     return(
         <div className='card'>
             <div className='card-body text-white' id='occupied'>
-                <h4 className='card-title'>Message</h4>
-                <p className='card-title'>
-                    Message this just a text of me text the stuff theat is meant also suppose to be for testing
+                <h4 className='card-title mt-2'>Message</h4>
+                <p id='carp' className='card-title' style={{Height:'90px', maxHeight:'90px', fontSize:'15px'}}>
+                    Message thisis meant also suppose to be for testing
                 </p>
-                <div id='bt' className='d-flex justify-content-between mb-5'>
-                    <p id='con' className='bg-success '>Completed</p>
-                    <i className='fa fa-pen-to-square'><i className='fa fa-trash ms-2'></i></i>
+                <div id='bt' className='d-flex justify-content-between '>
+                    <div className='mt-2'>
+                        <label>1/2/2024</label>
+                        <p id='con' className='bg-success'>Completed</p>
+                    </div >
+                    <i className='fa fa-pen-to-square mt-4'><i className='fa fa-trash ms-3'></i></i>
                 </div>
             </div>
         </div>
     );
 }
 const NewCard =() => {
-    const [showForm, setShowForm] = useState(false);
+    const {openForm} = useForm();
     
     return(
-        <div id='emptydiv' className='card' onClick={() => showForm===true ? setShowForm(false) : setShowForm(true)}>
-            <div id='divv' className='card-body text-white d-flex'>
+        <div id='emptydiv' className='card' onClick={
+            openForm
+        }>
+            <div id='divv' className='card-body text-white d-flex' onClick={openForm}>
                 <h4 className='card-title'>New Task</h4>
                 <i className='fa fa-plus mt-1 ms-3'></i>
             </div>
-            {showForm===true ? (<FormForNewTask/>) : ('')}
         </div>
     );
 }
 
 const Signout = () => {
+    const {openConfirm} = useForm();
     return(
             <div className='buttomdiv mb-5'>
-                <i className='fa fa-right-to-bracket'/>
+                <i className='fa fa-right-to-bracket' onClick={openConfirm}/>
             </div>
     );
 }
 
 const Menuitems =() => {
+    const {home,
+        toHome,
+        notHome,
+        completed,
+        toCompleted,
+        notCompleted,
+        incomplete,
+        toIncomplete,
+        notIncomplete,
+        important,
+        toImportant,
+        notImportant,} = useForm();
     const [aciveNav, SetActiveNavigation] = useState('home');
     const handleNavOnClick = (navItem) => {
         SetActiveNavigation(navItem)
     }
     return(
-        <div id='div1' className="centerdiv me-4">
+        <div id='div1' className="centerdiv p-0">
             <nav>
                 <ul>
                     <li 
                     className={`mb-2 ${aciveNav === 'home' ? 'active' : ''}`}
-                    onClick={() => handleNavOnClick('home')}
+                    onClick={() => {
+                        toHome();
+                        notCompleted();
+                        notImportant();
+                        notIncomplete();
+                        handleNavOnClick('home')
+                    }}
                     >
                          <i className='fa fa-home me-2'></i>
                     </li>
                     
                     <li 
                     className={` mb-2 ${aciveNav === 'important' ? 'active' : ''}`}
-                    onClick={() => handleNavOnClick('important')}
+                    onClick={() => {
+                        notHome();
+                        notCompleted();
+                        toImportant();
+                        notIncomplete();
+                        handleNavOnClick('important')
+                    }}
                     >
                         <i className='fa fa-check-to-slot me-2'></i>
                     </li>
                     
                     <li 
                     className={`text-white mb-2 ${aciveNav === 'complete' ? 'active' : ''}`}
-                    onClick={() => handleNavOnClick('complete')}
+                    onClick={() => {
+                        notHome();
+                        toCompleted();
+                        notImportant();
+                        notIncomplete();
+                        handleNavOnClick('complete')
+                    }}
                     >
                          <i className='fa fa-check me-2'></i>
                     </li>
                     
                     <li 
                     className={`text-white ${aciveNav === 'donow' ? 'active' : ''}`}
-                    onClick={() => handleNavOnClick('donow')}
+                    onClick={() => {
+                        notHome();
+                        notCompleted();
+                        notImportant();
+                        toIncomplete();
+                        handleNavOnClick('donow')
+                    }}
                     >
                          <i className='fa fa-list-check me-2'></i>
                     </li>
                 </ul>
             </nav>
+        </div>
+    );
+}
+
+const Overlay =() => {
+    return(
+        <div id='overlay'>
         </div>
     );
 }
@@ -116,7 +165,8 @@ const Login =() => {
             [e.target.name]: e.target.value
         });
     };
-    const handleSubmit= () => {
+    const handleSubmit= async (e) => {
+        e.preventDefault();
        if(signin){
 
        }else{
@@ -185,19 +235,48 @@ const Login =() => {
     );
 }
 
-const MainBody= () => {
+const Confirm = () => {
+    const {openLogin, closeConfirm} = useForm();
     return(
-        <div className="mainbody ">
-            
-         
-            {/* <NewCard/>  */}
-            
-            <Login/>
+        <form id='confirm'>
+            <h3>Confirm Signout</h3>
+            <div id='confirmicon' className='d-flex'>
+                <i className='fa fa-check ms-5 bg-success' onClick={openLogin}></i>
+                <i className='fa fa-x me-5 bg-danger' onClick={closeConfirm}></i>
+            </div>
+        </form>
+    );
+}
+
+const MainBody= () => {
+    const {home, incomplete, important, completed} = useForm();
+    return(
+        <div className="mainbody">
+            <div>
+                <h3 id='pin' className='text-white mb-4' style={{position:'absolute' ,margin:30}}>
+                   {home===true ? ('Home') : ('')}
+                   {incomplete===true ? ('Incomplete') : ('')}
+                   {important===true ? ('Important') : ('')}
+                   {completed===true ? ('Completed') : ('')}
+                    </h3>
+            </div>
+            <div className="" id='taskcontain' style={{padding:'12px'}}>
+                <OccupiedCard/>
+                <OccupiedCard/>
+                <OccupiedCard/>
+                <OccupiedCard/>
+                <OccupiedCard/>
+                <OccupiedCard/>
+                <OccupiedCard/>
+                <NewCard/>
+            </div>
+                 
         </div>
     );
 };
 
 const FormForNewTask =() => {
+    const {closeForm} = useForm();
     const [da, setDa] = useState([])
     const fetchdata = async function(){
         fetch('http://localhost:8080/user/allusers')
@@ -239,6 +318,9 @@ const FormForNewTask =() => {
         <form className='form form-check' id='formbox'>
             <div id='toptop'>
                 <h3 className='form-title text-black'>New Task</h3>
+                <i className='fa fa-x' onClick={() => {
+                    closeForm();
+                }}></i>
             </div>
             
             <label  htmlFor='name'>Title</label>
@@ -290,5 +372,18 @@ const FormForNewTask =() => {
     );
 }
 
-export { FormForNewTask, MainBody, SideNavigation };
+const Allcontain =() => {
+    const {showOverlay, showLogin, attemptToLogOut, signedIn, showForm} = useForm();
+    return(
+        <div className='maincontainer'>
+        {showOverlay && <Overlay/>}
+        {showLogin && <Login/>}
+        {showForm && <FormForNewTask/>}
+        {attemptToLogOut && <Confirm/>}
+        {signedIn && <SideNavigation/>}
+        {signedIn && <MainBody/>}
+        </div>
+    );
+}
 
+export { Allcontain };

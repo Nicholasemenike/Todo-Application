@@ -1,9 +1,16 @@
 package net.sprinBackend.springbootBackend.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import net.sprinBackend.springbootBackend.models.Task;
 import net.sprinBackend.springbootBackend.models.User;
+import net.sprinBackend.springbootBackend.repository.UserRepository;
+import net.sprinBackend.springbootBackend.security.events.RegistrationCompleteEvent;
+import net.sprinBackend.springbootBackend.security.exceptions.UserAlreadyExistException;
+import net.sprinBackend.springbootBackend.security.registration.RegistrationRequest;
 import net.sprinBackend.springbootBackend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,16 +19,11 @@ import java.util.List;
 @RequestMapping(path = "/user")
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
+@RequiredArgsConstructor
 public class UserController {
 
-
-    @Autowired
-    private UserService userService;
-
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user){
-        return new ResponseEntity<>(userService.registerUser(user), HttpStatus.OK);
-    }
+    private final UserService userService;
+    private final ApplicationEventPublisher publisher;
 
 //    @PostMapping("/login")
 //    public ResponseEntity<String> loginUser(@RequestBody User user){
@@ -33,14 +35,6 @@ public class UserController {
 //
 //    }
 
-//    public boolean checkUser(long id){
-//        userService.checkUser(id);
-//    }
-
-//    public boolean checkLogin(User user){
-//
-//    }
-
     @GetMapping("/task/completed")
     public List<Task> getCompletedTask(){
         return userService.getListOfCompletedTask();
@@ -49,14 +43,20 @@ public class UserController {
     @GetMapping("/task/undone")
     public List<Task> getUndoneTask(){return userService.getListOfUndoneTask();}
 
-    @PostMapping("/adduser")
-    public String saveUser(@RequestBody User user){
+    @PostMapping("/register")
+    public String saveUser(@RequestBody User user, final HttpServletRequest request){
         try{
             userService.SaveUser(user);
-            return "successfully Registered..";
+            publisher.publishEvent(new RegistrationCompleteEvent(user, applicationUrl(request )));
+            return "Success, check email to complete registration...";
         }catch (Exception e) {
             return "contact admin";
         }
+    }
+
+    @GetMapping("/verifyEmail")
+    public String applicationUrl(HttpServletRequest request) {
+        return "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
     }
 
     @PostMapping("/addtask")

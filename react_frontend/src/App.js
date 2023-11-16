@@ -1,13 +1,14 @@
 import React from "react";
 import "./App.css";
-import { MainBody } from "./Component";
+import { Allcontain } from "./Component";
+import { FormProvider } from "./GlobalState";
 
 function App() {
-  
   return (
-    <div className="maincontainer">
-      {/* <SideNavigation/> */}
-      <MainBody/>
+    <div >
+      <FormProvider>
+        <Allcontain/>
+      </FormProvider>
     </div>
   );
 }

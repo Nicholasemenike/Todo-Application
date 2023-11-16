@@ -1,30 +1,41 @@
 package net.sprinBackend.springbootBackend.services;
 
+import lombok.RequiredArgsConstructor;
 import net.sprinBackend.springbootBackend.models.Task;
 import net.sprinBackend.springbootBackend.models.User;
 import net.sprinBackend.springbootBackend.repository.TaskRepository;
 import net.sprinBackend.springbootBackend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import net.sprinBackend.springbootBackend.security.exceptions.UserAlreadyExistException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private TaskRepository taskRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
 
     public List<Task> getListOfCompletedTask(){
         return taskRepository.getCompletedTask();
     }
 
-    public void SaveUser(User user) {
-        userRepository.save(user);
+    public User SaveUser(User user) throws UserAlreadyExistException {
+        Optional<User> user1 = Optional.ofNullable(userRepository.findByEmail(user.email()));
+        if(user1.isPresent()){
+            throw new UserAlreadyExistException("Account with email "+user.email()+" already Exist...");
+        }
+        var newUser = new User();
+        newUser.setName(user.name());
+        newUser.setEmail(user.email());
+        newUser.setPassword(passwordEncoder.encode(user.password()));
+        newUser.setRole(user.role());
+        return userRepository.save(newUser);
     }
 
     public void SaveNewTask(Task task){
@@ -53,9 +64,6 @@ public class UserService {
 
     public String registerUser(User user) {
         try{
-            if(checkUser(user.getUserId())){
-                return "User Already Exist";
-            }
             userRepository.save(user);
             return "Registered Successfully";
         }catch (Exception e){
@@ -63,10 +71,8 @@ public class UserService {
         }
     }
 
-    public boolean checkUser(long id) {
-        try{
-            User user = userRepository.findById(id).get();
-            return Objects.nonNull(user);
-        }
-    }
+
+  public User findByEmail(String email){
+        return userRepository.findByEmail(email);
+  }
 }
