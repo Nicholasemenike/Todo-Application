@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.sprinBackend.springbootBackend.models.Task;
 import net.sprinBackend.springbootBackend.models.User;
 import net.sprinBackend.springbootBackend.services.serviceImplementors.UserServiceImp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,22 +13,12 @@ import java.util.List;
 
 @RequestMapping(path = "/user")
 @RestController
-@CrossOrigin(value = "http://localhost:3000")
-@RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImp userServiceImp;
-    private final ApplicationEventPublisher publisher;
-
-//    @PostMapping("/login")
-//    public ResponseEntity<String> loginUser(@RequestBody User user){
-//        if (checkUser(user.getUserId())){
-//            if(checkLogin(user)){
-//                return new ResponseEntity<>("Successfully login", HttpStatus.OK);
-//            }
-//        }
-//
-//    }
+    @Autowired
+    private UserServiceImp userServiceImp;
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     @GetMapping("/task/completed")
     public List<Task> getCompletedTask(){

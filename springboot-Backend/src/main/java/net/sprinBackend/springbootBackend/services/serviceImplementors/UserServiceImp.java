@@ -1,6 +1,5 @@
 package net.sprinBackend.springbootBackend.services.serviceImplementors;
 
-import lombok.RequiredArgsConstructor;
 import net.sprinBackend.springbootBackend.models.Task;
 import net.sprinBackend.springbootBackend.models.User;
 import net.sprinBackend.springbootBackend.repository.TaskRepository;
@@ -18,15 +17,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImp implements UserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    private final UserRepository userRepository;
-    private final TaskRepository taskRepository;
-    private final VerificationTokenRepository verificationTokenRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private UserRepository userRepository;
+    @Autowired private TaskRepository taskRepository;
+    @Autowired private VerificationTokenRepository verificationTokenRepository;
 
     public List<Task> getListOfCompletedTask(){
         return taskRepository.getCompletedTask();

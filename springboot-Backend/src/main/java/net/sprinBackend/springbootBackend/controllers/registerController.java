@@ -1,27 +1,27 @@
 package net.sprinBackend.springbootBackend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import net.sprinBackend.springbootBackend.models.User;
 import net.sprinBackend.springbootBackend.security.events.RegistrationCompleteEvent;
 import net.sprinBackend.springbootBackend.security.registration.RegistrationRequest;
 import net.sprinBackend.springbootBackend.services.serviceImplementors.UserServiceImp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
-@RequiredArgsConstructor
 @Controller
 @RequestMapping(path = "/register")
-@CrossOrigin
 public class registerController {
 
-    private final UserServiceImp userServiceImp;
-    private final ApplicationEventPublisher publisher;
+    @Autowired
+    private UserServiceImp userServiceImp;
+
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     @PostMapping
     public String saveUser(@RequestBody RegistrationRequest registrationRequest, final HttpServletRequest request){

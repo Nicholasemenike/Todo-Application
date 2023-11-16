@@ -165,12 +165,9 @@ const Login =() => {
             [e.target.name]: e.target.value
         });
     };
-    const handleSubmit= async (e) => {
-        e.preventDefault();
-       if(signin){
-
-       }else{
-        fetch('http://localhost:8080/user/register', {
+    const register = async (e) => {
+        // e.preventDefault();
+        fetch('http://localhost:8080/register', {
             method: 'POST',
             headers: {
                 'Content-Type' : 'application/json'
@@ -182,7 +179,9 @@ const Login =() => {
             console.log(data);
         })
         .catch(error => console.error('Error: ', error));
-       }
+    }
+    const login = async (e) => {
+
     }
     return(
         <form id='form-box'>
@@ -212,7 +211,7 @@ const Login =() => {
                     () => {
                         if(signup){
                             setSignin(false);
-                            handleSubmit()
+                            login()
                         }else{
                             setSignup(true)
                             setSignin(false)
@@ -222,7 +221,7 @@ const Login =() => {
                     () => {
                         if(signin){
                             setSignup(false);
-                            handleSubmit()
+                           register()
                         }else{
                             setSignin(true)
                             setSignup(false)
@@ -378,6 +377,7 @@ const Allcontain =() => {
         <div className='maincontainer'>
         {showOverlay && <Overlay/>}
         {showLogin && <Login/>}
+        {signedIn || <Login/>}
         {showForm && <FormForNewTask/>}
         {attemptToLogOut && <Confirm/>}
         {signedIn && <SideNavigation/>}

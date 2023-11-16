@@ -113,6 +113,7 @@ li.active{
     transition: .2s;
 }
 form{
+    overflow: auto;
     z-index: 2;
     width: 350px;
     height: 500px;
@@ -125,6 +126,9 @@ form{
     padding: 50px 30px 20px;
     background-color: #eae4e4;
     border-radius: 20px;
+}
+form::-webkit-scrollbar{
+    width: 0.5rem;
 }
 form label{
     color: black;

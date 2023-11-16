@@ -3,7 +3,6 @@ package net.sprinBackend.springbootBackend.security.events;
 import lombok.Getter;
 import lombok.Setter;
 import net.sprinBackend.springbootBackend.models.User;
-import net.sprinBackend.springbootBackend.security.registration.RegistrationRequest;
 import org.springframework.context.ApplicationEvent;
 
 @Getter

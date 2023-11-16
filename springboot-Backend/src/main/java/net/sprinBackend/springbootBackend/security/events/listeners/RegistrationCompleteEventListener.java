@@ -1,10 +1,10 @@
 package net.sprinBackend.springbootBackend.security.events.listeners;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sprinBackend.springbootBackend.models.User;
 import net.sprinBackend.springbootBackend.security.events.RegistrationCompleteEvent;
 import net.sprinBackend.springbootBackend.services.serviceImplementors.UserServiceImp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +12,10 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class RegistrationCompleteEventListener  implements ApplicationListener<RegistrationCompleteEvent> {
 
-    private final UserServiceImp userServiceImp;
+    @Autowired
+    private UserServiceImp userServiceImp;
 
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent event) {

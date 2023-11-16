@@ -11,7 +11,7 @@ export const FormProvider = ({children}) => {
   const [important, setImportant] = useState(false);
   const [incomplete, setIncomplete] = useState(false);
   const [attemptToLogOut, setAttemptToLogOut] = useState(false);
-  const [signedIn, setSignedIn] = useState(true);
+  const [signedIn, setSignedIn] = useState(false);
 
   const userIn = () => {
     setSignedIn(true);
