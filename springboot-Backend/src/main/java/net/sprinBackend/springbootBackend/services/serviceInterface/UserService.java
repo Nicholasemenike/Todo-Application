@@ -3,7 +3,6 @@ package net.sprinBackend.springbootBackend.services.serviceInterface;
 
 import net.sprinBackend.springbootBackend.models.Task;
 import net.sprinBackend.springbootBackend.models.User;
-import net.sprinBackend.springbootBackend.security.registration.RegistrationRequest;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ public interface UserService{
 
     List<Task> getListOfCompletedTask();
 
-    User registerUser(RegistrationRequest user);
+//    User registerUser(RegistrationRequest user);
 
     void newTask(Task task);
 
