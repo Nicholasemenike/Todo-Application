@@ -1,28 +1,29 @@
 package net.sprinBackend.springbootBackend.services.serviceInterface;
 
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
+
 import net.sprinBackend.springbootBackend.models.Task;
 import net.sprinBackend.springbootBackend.models.User;
 
-import java.util.List;
-
-public interface UserService{
+public interface UserService {
 
     List<Task> getListOfCompletedTask();
 
-//    User registerUser(RegistrationRequest user);
-
-    void newTask(Task task);
+    ResponseEntity<String> newTask(Task task);
 
     List<Task> getListOfUndoneTask();
 
-    List<Task> getAllTask();
+    Optional<User> getProfile(int id);
 
-    User getProfile(int id);
-
-    void deleteTask(int id);
+    void deleteTask(int id, int userid);
 
     List<User> getAllUsers();
-    
-    void saveUserVerificationToken(User user, String token);
+
+    User register(User user);
+
+    ResponseEntity<String> login(User user);
 }

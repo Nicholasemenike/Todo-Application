@@ -1,5 +1,6 @@
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './Component.css';
 import { useForm } from './GlobalState';
 import './fontawesome-free-6.4.2-web/css/all.css';
@@ -15,19 +16,37 @@ const SideNavigation = () => {
     );
 };
 
+
+
 const Topdetails = () => {
     return(
         <div className='topdiv d-flex center mt-5 text-center'>
+            <label className="userimage">userEmail</label>
             <img src={img} className="userimage" alt='user image'/>
         </div>
     );
 }
 
+
+
 const OccupiedCard = () => {
+    const U = localStorage.getItem("userid")
+    const [tasklist, setTasklist] = useState([]);
+    useEffect(() =>{
+        axios.get(`http://localhost:8080/user/task/all/${U}`)
+        .then(response=> {
+            console.log("in the collection zone")
+            console.log(tasklist)
+            setTasklist(response.data)
+        }
+            )
+        .catch(error => console.log('error fetching task', error))
+    },[])
     return(
         <div className='card'>
+            {tasklist.map((task) => {
             <div className='card-body text-white' id='occupied'>
-                <h4 className='card-title mt-2'>Message</h4>
+                <h4 className='card-title mt-2'>{task.name}</h4>
                 <p id='carp' className='card-title' style={{Height:'90px', maxHeight:'90px', fontSize:'15px'}}>
                     Message thisis meant also suppose to be for testing
                 </p>
@@ -39,6 +58,7 @@ const OccupiedCard = () => {
                     <i className='fa fa-pen-to-square mt-4'><i className='fa fa-trash ms-3'></i></i>
                 </div>
             </div>
+            })}
         </div>
     );
 }
@@ -152,35 +172,59 @@ const Overlay =() => {
 }
 
 const Login =() => {
+    const {userIn} = useForm();
+    const [accountExit, setAccountExit] = useState(false);
     const [signin, setSignin] = useState(false)
     const [signup, setSignup] = useState(true)
+    const [valid, setValid] = useState(false)
     const [form, setForm] = useState({
         name: '',
         email: '',
-        number: ''
+        password: ''
+    })
+    const [loginForm, setLoginForm] = useState({
+        email: '',
+        password: ''
     })
     const handleChange = (e) => {
+        e.preventDefault();
         setForm({
             ...form,
             [e.target.name]: e.target.value
         });
     };
-    const register = async (e) => {
-        // e.preventDefault();
-        fetch('http://localhost:8080/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify(form)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => console.error('Error: ', error));
-    }
-    const login = async (e) => {
+    const register = async  () => {
+        try {
+            if(form.email.length< 3 || form.name.length < 3 || form.password.length< 3){
+                setValid(true)
+                setTimeout(()=>{
+                    setValid(false)
+                },2000)
+                return;
+            }
+            const response = await axios.post('http://localhost:8080/user/register', form);
+            if (response.status === 200) {
+                localStorage.setItem("userid", response.data);
+                userIn()
+            }
+          } catch (error) {
+            setAccountExit(true)
+            setTimeout(()=>{
+                setAccountExit(false)
+            },5000)
+            console.error('Error during registration:', error);
+          }
+    };
+
+    const login = async () => {
+        const u = localStorage.getItem('userid')
+        console.log(u)
+        try{
+            const response = axios.get('http://localhost:8080/user/task/all/'+u)
+            console.log((await response).data)
+        }catch(error){
+            console.log(error)
+        }
 
     }
     return(
@@ -188,40 +232,42 @@ const Login =() => {
             <div>
 
                 <h1 id='title'>{signup===true ? ('Sign Up') : ('Sign In')}</h1>
+                <h5 id='valid' style={valid ? {display: 'block'} : {}}>Please enter a valid details for proper registration</h5>
+                <h5 id='valid' style={accountExit ? {display: 'block'} : {}}>Account with {form.email} Already Exist</h5>
 
                 <div className='input-field' style={signin===true ? {maxHeight:0} : {}} >
                     <i className='fa fa-user'></i>
-                    <input id='name' className='' type='text' required={!signin} onChange={handleChange} placeholder='name'></input>
+                    <input id='name' name='name' className='' type='text' required={!signin} onChange={handleChange} placeholder='name'></input>
                 </div> 
                 
                 <div className='input-field'>
                     <i className='fa fa-envelope'></i>
-                    <input id='email' className='' type='email' required onChange={handleChange} placeholder='email'></input>
+                    <input id='email' name='email' className='' type='email' required onChange={handleChange} placeholder='email'></input>
                 </div>
                 
                 <div className='input-field'>
                     <i className='fa fa-lock' ></i>
-                    <input id='password' className='' type='password' required onChange={handleChange} placeholder='password'></input>
+                    <input name='password' className='' type='password' required onChange={handleChange} placeholder='password'></input>
                 </div>
                 <p className='text-black'>Forgot passcode ? <a href='#'>click here</a> </p>
             </div>
 
             <div className='btn-field'>
-                <button type='submit' className={`${signup===true ? '' : 'disable'}`}  onClick={
-                    () => {
+                <button type='submit' className={`${signup ? '' : 'disable'}`}  onClick={
+                    (e) => {
                         if(signup){
-                            setSignin(false);
-                            login()
+                            e.preventDefault();
+                            register();
                         }else{
                             setSignup(true)
                             setSignin(false)
                         }}
                      }>Sign Up</button>
                 <button type='submit' className={`${signin===true ? '' : 'disable'}`} onClick={
-                    () => {
+                    (e) => {
+                        e.preventDefault();
                         if(signin){
-                            setSignup(false);
-                           register()
+                            login();
                         }else{
                             setSignin(true)
                             setSignup(false)
@@ -261,12 +307,6 @@ const MainBody= () => {
             </div>
             <div className="" id='taskcontain' style={{padding:'12px'}}>
                 <OccupiedCard/>
-                <OccupiedCard/>
-                <OccupiedCard/>
-                <OccupiedCard/>
-                <OccupiedCard/>
-                <OccupiedCard/>
-                <OccupiedCard/>
                 <NewCard/>
             </div>
                  
@@ -274,23 +314,16 @@ const MainBody= () => {
     );
 };
 
-const FormForNewTask =() => {
+const FormForNewTask =(e) => {
+    const currentTime = new Date();
+    const u = localStorage.getItem('userid');
     const {closeForm} = useForm();
-    const [da, setDa] = useState([])
-    const fetchdata = async function(){
-        fetch('http://localhost:8080/user/allusers')
-        .then(response => response.json())
-        .then(data => {
-            setDa(data)
-            console.log(da)
-    })
-        .catch(error => console.error(error))
-        }
     const [formData, setFormData] = useState({
         name: '',
-        description: '',
-        date: '',
-        important: ''
+        description: 'c',
+        time: currentTime.toISOString(),
+        important: '',
+        user: {u}
     })
     const handleChange = (e) => {
         setFormData({
@@ -299,15 +332,17 @@ const FormForNewTask =() => {
             
         });
     };
-    const sendData =  ()  =>  {
-        fetch('http://localhost:8080/user/addtask', {
-            method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
+    const sendData =  (e)  =>  {
+        e.preventDefault();
+        axios.post(`http://localhost:8080/user/task/add`, {...formData, user : u})
+        // fetch(`http://localhost:8080/user/task/add`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type' : 'application/json'
+        //     },
+        //     body: JSON.stringify(formData)
+        // })
+        // .then(response => response.json())
         .then(data => {
             console.log(data);
         })
@@ -363,7 +398,7 @@ const FormForNewTask =() => {
                     <input className='ms-2 mt-1' id='check' name='important'  type='checkbox' value={formData.important}/>
                 </div>
                 <div>
-                    <button id='creat' onClick={fetchdata} className='' type='submit'><i className='fa fa-plus'></i> Create task</button>
+                    <button id='creat' onClick={sendData} className='' type='submit'><i className='fa fa-plus'></i> Create task</button>
                 </div>
             
             </div>
@@ -372,16 +407,28 @@ const FormForNewTask =() => {
 }
 
 const Allcontain =() => {
-    const {showOverlay, showLogin, attemptToLogOut, signedIn, showForm} = useForm();
+    const {showOverlay, showLogin, attemptToLogOut, signedIn, success, showForm, openSuccess} = useForm();
     return(
         <div className='maincontainer'>
         {showOverlay && <Overlay/>}
         {showLogin && <Login/>}
-        {signedIn || <Login/>}
         {showForm && <FormForNewTask/>}
         {attemptToLogOut && <Confirm/>}
         {signedIn && <SideNavigation/>}
         {signedIn && <MainBody/>}
+        {success && <SuccessCard/>}
+        </div>
+    );
+}
+
+const SuccessCard = () => {
+    return(
+        <div id='succes'>
+            <div>
+            <label>Success</label>
+            <i className='fa fa-thumbs-up'></i>
+            </div>
+            <p>Check Email to Verify Account....</p>
         </div>
     );
 }

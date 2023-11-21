@@ -5,21 +5,32 @@ export const FormContext = createContext();
 export const FormProvider = ({children}) => {
   const [showForm, setShowForm] = useState(false);
   const [showOverlay, setOverlay] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
   const [home, setHome] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [important, setImportant] = useState(false);
   const [incomplete, setIncomplete] = useState(false);
   const [attemptToLogOut, setAttemptToLogOut] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
+const [success, setSuccess] = useState(false);
+const [userE, setUserE] = useState(null);
+
+const setUserEmail = (email) => {
+  setUserE(email)
+}
+
+const openSuccess = () => {
+  setSuccess(true);
+  setTimeout(()=> {
+    userIn()
+    setSuccess(false)
+  },2000)
+}
 
   const userIn = () => {
+    setOverlay(false)
+    setShowLogin(false)
     setSignedIn(true);
-  }
-  
-  const userout = () => {
-    setShowLogin(true);
-    setSignedIn(false);
   }
 
   const openConfirm = () => {
@@ -93,6 +104,8 @@ export const FormProvider = ({children}) => {
       home,
       toHome,
       notHome,
+      userE,
+      setUserEmail,
       completed,
       toCompleted,
       notCompleted,
@@ -110,6 +123,9 @@ export const FormProvider = ({children}) => {
       closeForm,
       signedIn,
       showOverlay,
+      openSuccess,
+      success,
+      userIn,
       }}>
       {children}
     </FormContext.Provider>
