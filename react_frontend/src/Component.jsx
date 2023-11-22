@@ -30,35 +30,47 @@ const Topdetails = () => {
 
 
 const OccupiedCard = () => {
+    const {fetchTodo} = useForm()
     const U = localStorage.getItem("userid")
     const [tasklist, setTasklist] = useState([]);
-    useEffect(() =>{
-        axios.get(`http://localhost:8080/user/task/all/${U}`)
-        .then(response=> {
-            console.log("in the collection zone")
+    useEffect(()  =>{
+        async function fetch(){
+            const response = await axios.get(`http://localhost:8080/user/task/all/${U}`)
+            if(response.status===200){
+             console.log("in the collection zone")
             console.log(tasklist)
             setTasklist(response.data)
-        }
-            )
-        .catch(error => console.log('error fetching task', error))
+            if(tasklist.length>0){
+                fetchTodo();
+            }
+            }
+        //     .then(response=> {
+  
+        //  }
+        //  )
+        // .catch(error => console.log('error fetching task', error))
+        }     
     },[])
     return(
         <div className='card'>
-            {tasklist.map((task) => {
-            <div className='card-body text-white' id='occupied'>
-                <h4 className='card-title mt-2'>{task.name}</h4>
-                <p id='carp' className='card-title' style={{Height:'90px', maxHeight:'90px', fontSize:'15px'}}>
-                    Message thisis meant also suppose to be for testing
-                </p>
-                <div id='bt' className='d-flex justify-content-between '>
-                    <div className='mt-2'>
-                        <label>1/2/2024</label>
-                        <p id='con' className='bg-success'>Completed</p>
-                    </div >
-                    <i className='fa fa-pen-to-square mt-4'><i className='fa fa-trash ms-3'></i></i>
-                </div>
-            </div>
-            })}
+            {fetchTodo ? (()=>{
+                 {tasklist.map((task) => {
+                        <div key={task.taskId} className='card-body text-white' id='occupied'>
+                            <h4 className='card-title mt-2'>{task.name}</h4>
+                            <p id='carp' className='card-title' style={{Height:'90px', maxHeight:'90px', fontSize:'15px'}}>
+                                {task.description}
+                            </p>
+                            <div id='bt' className='d-flex justify-content-between '>
+                                <div className='mt-2'>
+                                    <label>{task.date}</label>
+                                    <p id='con' className='bg-success'>{task.completed ? ('Completed') : ('Incompleted')} </p>
+                                </div >
+                                <i className='fa fa-pen-to-square mt-4'><i className='fa fa-trash ms-3'></i></i>
+                            </div>
+                        </div>
+                        })}
+                        }) : ({})}
+          
         </div>
     );
 }
@@ -204,7 +216,7 @@ const Login =() => {
             }
             const response = await axios.post('http://localhost:8080/user/register', form);
             if (response.status === 200) {
-                localStorage.setItem("userid", response.data);
+                localStorage.setItem("userid", response.data.userId);
                 userIn()
             }
           } catch (error) {
@@ -294,7 +306,7 @@ const Confirm = () => {
 }
 
 const MainBody= () => {
-    const {home, incomplete, important, completed} = useForm();
+    const {home, incomplete, important, completed, fetchTodo} = useForm();
     return(
         <div className="mainbody">
             <div>
@@ -306,7 +318,7 @@ const MainBody= () => {
                     </h3>
             </div>
             <div className="" id='taskcontain' style={{padding:'12px'}}>
-                <OccupiedCard/>
+                {fetchTodo ? <OccupiedCard/> : {}}
                 <NewCard/>
             </div>
                  
@@ -317,10 +329,10 @@ const MainBody= () => {
 const FormForNewTask =(e) => {
     const currentTime = new Date();
     const u = localStorage.getItem('userid');
-    const {closeForm} = useForm();
+    const {closeForm, openSuccess} = useForm();
     const [formData, setFormData] = useState({
         name: '',
-        description: 'c',
+        description: '',
         time: currentTime.toISOString(),
         important: '',
         user: {u}
@@ -334,17 +346,12 @@ const FormForNewTask =(e) => {
     };
     const sendData =  (e)  =>  {
         e.preventDefault();
-        axios.post(`http://localhost:8080/user/task/add`, {...formData, user : u})
-        // fetch(`http://localhost:8080/user/task/add`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type' : 'application/json'
-        //     },
-        //     body: JSON.stringify(formData)
-        // })
-        // .then(response => response.json())
+        axios.post(`http://localhost:8080/user/task/add/${u}`, formData)
         .then(data => {
             console.log(data);
+            if(data.status===200){
+                openSuccess();
+            }
         })
         .catch(error => console.error('Error: ', error));
     }
@@ -407,7 +414,7 @@ const FormForNewTask =(e) => {
 }
 
 const Allcontain =() => {
-    const {showOverlay, showLogin, attemptToLogOut, signedIn, success, showForm, openSuccess} = useForm();
+    const {showOverlay, showLogin, attemptToLogOut, signedIn, success, showForm} = useForm();
     return(
         <div className='maincontainer'>
         {showOverlay && <Overlay/>}
@@ -424,11 +431,10 @@ const Allcontain =() => {
 const SuccessCard = () => {
     return(
         <div id='succes'>
-            <div>
+            <div className='mt-3'>
             <label>Success</label>
             <i className='fa fa-thumbs-up'></i>
             </div>
-            <p>Check Email to Verify Account....</p>
         </div>
     );
 }

@@ -5,26 +5,39 @@ export const FormContext = createContext();
 export const FormProvider = ({children}) => {
   const [showForm, setShowForm] = useState(false);
   const [showOverlay, setOverlay] = useState(false);
-  const [showLogin, setShowLogin] = useState(true);
+  const [showLogin, setShowLogin] = useState(false);
   const [home, setHome] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [important, setImportant] = useState(false);
   const [incomplete, setIncomplete] = useState(false);
   const [attemptToLogOut, setAttemptToLogOut] = useState(false);
-  const [signedIn, setSignedIn] = useState(false);
+  const [signedIn, setSignedIn] = useState(true);
 const [success, setSuccess] = useState(false);
 const [userE, setUserE] = useState(null);
+const [fetchTask, setFetchTask] = useState(false);
+const [task, setTask] = useState(false);
 
 const setUserEmail = (email) => {
   setUserE(email)
 }
 
+const loadTask = () =>{
+  setTask(true);
+}
+
 const openSuccess = () => {
   setSuccess(true);
+  setShowForm(false)
+  setOverlay(true)
   setTimeout(()=> {
     userIn()
+    setOverlay(false)
     setSuccess(false)
   },2000)
+}
+
+const fetchTodo = () => {
+  setFetchTask(true);
 }
 
   const userIn = () => {
@@ -98,6 +111,8 @@ const openSuccess = () => {
 
   return(
     <FormContext.Provider value={{
+      fetchTodo,
+      fetchTask,
       attemptToLogOut,
       openConfirm,
       closeConfirm,

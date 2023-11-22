@@ -13,7 +13,7 @@ public interface UserService {
 
     List<Task> getListOfCompletedTask();
 
-    ResponseEntity<String> newTask(Task task);
+    ResponseEntity<String> newTask(Long usreid,Task task);
 
     List<Task> getListOfUndoneTask();
 

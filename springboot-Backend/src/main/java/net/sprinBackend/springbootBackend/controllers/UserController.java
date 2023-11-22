@@ -39,10 +39,10 @@ public class UserController {
     }
 
 
-    @PostMapping("task/add")
-    public ResponseEntity<?> saveNewTask(@RequestBody Task task) {
+    @PostMapping("task/add/{userid}")
+    public ResponseEntity<?> saveNewTask(@PathVariable Long userid, @RequestBody Task task) {
         try {
-            return userServiceImp.newTask(task);
+            return userServiceImp.newTask(userid,task);
         } catch (Exception e) {
             return new ResponseEntity<>("contact n__k--y", HttpStatus.CONFLICT);
         }

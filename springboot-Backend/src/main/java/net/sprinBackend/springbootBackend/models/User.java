@@ -4,9 +4,6 @@ import java.util.List;
 
 import org.hibernate.annotations.NaturalId;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -42,21 +39,4 @@ public class User{
             fetch = FetchType.EAGER
     )
     private List<Task> tasks;
-
-     @JsonCreator
-    public static User fromJson(
-            @JsonProperty("userId") int userId,
-            @JsonProperty("name") String name,
-            @JsonProperty("email") String email,
-            @JsonProperty("password") String password,
-            @JsonProperty("tasks") List<Task> tasks) {
-
-        return User.builder()
-                .userId(userId)
-                .name(name)
-                .email(email)
-                .password(password)
-                .tasks(tasks)
-                .build();
-    }
 }

@@ -30,17 +30,26 @@ public class UserServiceImp implements UserService {
         return taskRepository.getCompletedTask();
     }
 
-    public ResponseEntity<String> newTask(Task task) {
-        System.out.println(task);
-        User user = userRepository.findByEmail(task.getUser().getEmail()).get();
+    public ResponseEntity<String> newTask(Long userid,Task task) {
 
-        var newTask = new Task();
-        newTask.setUser(user);
-        newTask.setDescription(task.getDescription());
-        newTask.setImportant(task.isImportant());
-        newTask.setCompleted(task.isCompleted());
-        newTask.setName(task.getName());
-        newTask.setTime(task.getTime());
+        System.out.println(userid+""+task);
+        User user = userRepository.findById(userid).get();
+
+        User ownUser = User.builder()
+        .userId(user.getUserId())
+        .email(user.getEmail())
+        .name(user.getName())
+        .password(user.getPassword())
+        .build();
+
+        Task newTask = Task.builder()
+        .user(ownUser)
+        .completed(task.isCompleted())
+        .description(task.getDescription())
+        .name(task.getName())
+        .time(task.getTime())
+        .important(task.isImportant())
+        .build();
         taskRepository.save(newTask);
         return new ResponseEntity<>("succussfully added", HttpStatus.OK);
     }
