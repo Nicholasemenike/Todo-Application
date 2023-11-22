@@ -29,51 +29,101 @@ const Topdetails = () => {
 
 
 
-const OccupiedCard = () => {
-    const {fetchTodo} = useForm()
-    const U = localStorage.getItem("userid")
-    const [tasklist, setTasklist] = useState([]);
-    useEffect(()  =>{
-        async function fetch(){
-            const response = await axios.get(`http://localhost:8080/user/task/all/${U}`)
-            if(response.status===200){
-             console.log("in the collection zone")
-            console.log(tasklist)
-            setTasklist(response.data)
-            if(tasklist.length>0){
-                fetchTodo();
-            }
-            }
-        //     .then(response=> {
+// const OccupiedCard = () => {
+//     const {fetchTodo} = useForm()
+//     const U = localStorage.getItem("userid")
+//     const [tasklist, setTasklist] = useState([]);
+//     useEffect(()  =>{
+//         async function fetch(){
+//             const response = await axios.get(`http://localhost:8080/user/task/all/${U}`)
+//             if(response.status===200){
+//              console.log("in the collection zone")
+//             console.log(tasklist)
+//             setTasklist(response.data)
+//             if(tasklist.length>0){
+//                 fetchTodo();
+//             }
+//             }
+//         //     .then(response=> {
   
-        //  }
-        //  )
-        // .catch(error => console.log('error fetching task', error))
-        }     
-    },[])
-    return(
-        <div className='card'>
-            {fetchTodo ? (()=>{
-                 {tasklist.map((task) => {
-                        <div key={task.taskId} className='card-body text-white' id='occupied'>
-                            <h4 className='card-title mt-2'>{task.name}</h4>
-                            <p id='carp' className='card-title' style={{Height:'90px', maxHeight:'90px', fontSize:'15px'}}>
-                                {task.description}
-                            </p>
-                            <div id='bt' className='d-flex justify-content-between '>
-                                <div className='mt-2'>
-                                    <label>{task.date}</label>
-                                    <p id='con' className='bg-success'>{task.completed ? ('Completed') : ('Incompleted')} </p>
-                                </div >
-                                <i className='fa fa-pen-to-square mt-4'><i className='fa fa-trash ms-3'></i></i>
-                            </div>
-                        </div>
-                        })}
-                        }) : ({})}
+//         //  }
+//         //  )
+//         // .catch(error => console.log('error fetching task', error))
+//         }     
+//     },fetch())
+//     return(
+//         <div className='card'>
+//             {fetchTodo ? (()=>{
+//                  {tasklist.map((task) => {
+//                         <div key={task.taskId} className='card-body text-white' id='occupied'>
+//                             <h4 className='card-title mt-2'>{task.name}</h4>
+//                             <p id='carp' className='card-title' style={{Height:'90px', maxHeight:'90px', fontSize:'15px'}}>
+//                                 {task.description}
+//                             </p>
+//                             <div id='bt' className='d-flex justify-content-between '>
+//                                 <div className='mt-2'>
+//                                     <label>{task.date}</label>
+//                                     <p id='con' className='bg-success'>{task.completed ? ('Completed') : ('Incompleted')} </p>
+//                                 </div >
+//                                 <i className='fa fa-pen-to-square mt-4'><i className='fa fa-trash ms-3'></i></i>
+//                             </div>
+//                         </div>
+//                         })}
+//                         }) : ({})}
           
-        </div>
+//         </div>
+//     );
+// }
+const OccupiedCard = () => {
+    const { fetchTodo } = useForm();
+    const U = localStorage.getItem("userid");
+    const [tasklist, setTasklist] = useState([]);
+  
+    useEffect(() => {
+      async function fetch() {
+        try {
+          const response = await axios.get(`http://localhost:8080/user/task/all/${U}`);
+          if (response.status === 200) {
+            console.log("in the collection zone");
+            console.log(response.data); // log the data received
+            setTasklist(response.data);
+            if (tasklist.length > 0 && fetchTodo) {
+              fetchTodo();
+            }
+          }
+        } catch (error) {
+          console.log('error fetching task', error);
+        }
+      }
+  
+      fetch(); // Call the fetch function
+  
+    }, [fetchTodo, U]); // Added fetchTodo and U as dependencies
+  
+    return (
+      <div className='card'>
+        {tasklist.map((task) => (
+          <div key={task.taskId} className='card-body text-white' id='occupied'>
+            <h4 className='card-title mt-2'>{task.name}</h4>
+            <p id='carp' className='card-title' style={{ height: '90px', maxHeight: '90px', fontSize: '15px' }}>
+              {task.description}
+            </p>
+            <div id='bt' className='d-flex justify-content-between '>
+              <div className='mt-2'>
+                <label>{task.date}</label>
+                <p id='con' className='bg-success'>
+                  {task.completed ? 'Completed' : 'Incompleted'}
+                </p>
+              </div>
+              <i className='fa fa-pen-to-square mt-4'>
+                <i className='fa fa-trash ms-3'></i>
+              </i>
+            </div>
+          </div>
+        ))}
+      </div>
     );
-}
+  };
 const NewCard =() => {
     const {openForm} = useForm();
     
@@ -318,7 +368,7 @@ const MainBody= () => {
                     </h3>
             </div>
             <div className="" id='taskcontain' style={{padding:'12px'}}>
-                {fetchTodo ? <OccupiedCard/> : {}}
+                {fetchTodo && <OccupiedCard/>}
                 <NewCard/>
             </div>
                  
