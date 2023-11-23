@@ -30,10 +30,8 @@ public class UserServiceImp implements UserService {
         return taskRepository.getCompletedTask();
     }
 
-    public ResponseEntity<String> newTask(Long userid,Task task) {
-
-        System.out.println(userid+""+task);
-        User user = userRepository.findById(userid).get();
+    public ResponseEntity<String> newTask(String userid,Task task) {
+        User user = userRepository.findByEmail(userid).get();
 
         User ownUser = User.builder()
         .userId(user.getUserId())
@@ -58,8 +56,13 @@ public class UserServiceImp implements UserService {
         return taskRepository.getUndoneTask();
     }
 
-    public List<Task> getAllTask(int id) {
-        return taskRepository.findtaskbyid(id);
+    public ResponseEntity<List<Task>>getAllTask(User id) {
+        try{
+            return taskRepository.findtaskbyid(id);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Optional<User> getProfile(int id) {
@@ -92,13 +95,13 @@ public class UserServiceImp implements UserService {
         var U = userRepository.findByEmail(user.getEmail());
         if (U.isPresent()) {
             var Upasscode = U.get().getPassword();
-            if (user.getPassword().equals(Upasscode)) {
-                return new ResponseEntity<>("Successfully logged in ", HttpStatus.ACCEPTED);
+            if (passwordEncoder.matches(user.getPassword(), Upasscode)) {
+                return new ResponseEntity<>("200", HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_GATEWAY);
+                return new ResponseEntity<>("302", HttpStatus.OK);
             }
         } else {
-            return new ResponseEntity<>("Account dont exists", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("502", HttpStatus.OK);
         }
     }
 }

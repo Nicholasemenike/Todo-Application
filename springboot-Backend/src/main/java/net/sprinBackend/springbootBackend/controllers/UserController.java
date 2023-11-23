@@ -40,7 +40,7 @@ public class UserController {
 
 
     @PostMapping("task/add/{userid}")
-    public ResponseEntity<?> saveNewTask(@PathVariable Long userid, @RequestBody Task task) {
+    public ResponseEntity<?> saveNewTask(@PathVariable String userid, @RequestBody Task task) {
         try {
             return userServiceImp.newTask(userid,task);
         } catch (Exception e) {
@@ -49,8 +49,13 @@ public class UserController {
     }
 
     @GetMapping("task/all/{userid}")
-    public List<Task> getAllTask(@PathVariable int userid) {
-        return userServiceImp.getAllTask(userid);
+    public ResponseEntity<List<Task>> getAllTask(@PathVariable User userid) {
+        try{
+            return userServiceImp.getAllTask(userid);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @GetMapping("/all")
@@ -84,6 +89,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user) {
-        return userServiceImp.login(user);
+            return userServiceImp.login(user);
     }
 }

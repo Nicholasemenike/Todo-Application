@@ -27,103 +27,94 @@ const Topdetails = () => {
     );
 }
 
-
-
-// const OccupiedCard = () => {
-//     const {fetchTodo} = useForm()
-//     const U = localStorage.getItem("userid")
-//     const [tasklist, setTasklist] = useState([]);
-//     useEffect(()  =>{
-//         async function fetch(){
-//             const response = await axios.get(`http://localhost:8080/user/task/all/${U}`)
-//             if(response.status===200){
-//              console.log("in the collection zone")
-//             console.log(tasklist)
-//             setTasklist(response.data)
-//             if(tasklist.length>0){
-//                 fetchTodo();
-//             }
-//             }
-//         //     .then(response=> {
-  
-//         //  }
-//         //  )
-//         // .catch(error => console.log('error fetching task', error))
-//         }     
-//     },fetch())
-//     return(
-//         <div className='card'>
-//             {fetchTodo ? (()=>{
-//                  {tasklist.map((task) => {
-//                         <div key={task.taskId} className='card-body text-white' id='occupied'>
-//                             <h4 className='card-title mt-2'>{task.name}</h4>
-//                             <p id='carp' className='card-title' style={{Height:'90px', maxHeight:'90px', fontSize:'15px'}}>
-//                                 {task.description}
-//                             </p>
-//                             <div id='bt' className='d-flex justify-content-between '>
-//                                 <div className='mt-2'>
-//                                     <label>{task.date}</label>
-//                                     <p id='con' className='bg-success'>{task.completed ? ('Completed') : ('Incompleted')} </p>
-//                                 </div >
-//                                 <i className='fa fa-pen-to-square mt-4'><i className='fa fa-trash ms-3'></i></i>
-//                             </div>
-//                         </div>
-//                         })}
-//                         }) : ({})}
-          
-//         </div>
-//     );
-// }
 const OccupiedCard = () => {
-    const { fetchTodo } = useForm();
-    const U = localStorage.getItem("userid");
+    const {fetchTodo} = useForm()
+    const U = localStorage.getItem("userid")
     const [tasklist, setTasklist] = useState([]);
-  
-    useEffect(() => {
-      async function fetch() {
-        try {
-          const response = await axios.get(`http://localhost:8080/user/task/all/${U}`);
-          if (response.status === 200) {
-            console.log("in the collection zone");
-            console.log(response.data); // log the data received
-            setTasklist(response.data);
-            if (tasklist.length > 0 && fetchTodo) {
-              fetchTodo();
-            }
-          }
-        } catch (error) {
-          console.log('error fetching task', error);
+
+    useEffect(()=>{
+        loadTask();
+    },[])
+    
+    const loadTask = async () => {
+        try{
+            const result = await axios.get('http://localhost:8080/user/task/all'+U)
+            .then(res => console.log(res))
+            setTasklist(result.data)
+            console.log(result)
+        }catch(error){
+            console.log('Error while load task :' +error)
         }
-      }
-  
-      fetch(); // Call the fetch function
-  
-    }, [fetchTodo, U]); // Added fetchTodo and U as dependencies
-  
-    return (
-      <div className='card'>
-        {tasklist.map((task) => (
-          <div key={task.taskId} className='card-body text-white' id='occupied'>
-            <h4 className='card-title mt-2'>{task.name}</h4>
-            <p id='carp' className='card-title' style={{ height: '90px', maxHeight: '90px', fontSize: '15px' }}>
-              {task.description}
-            </p>
-            <div id='bt' className='d-flex justify-content-between '>
-              <div className='mt-2'>
-                <label>{task.date}</label>
-                <p id='con' className='bg-success'>
-                  {task.completed ? 'Completed' : 'Incompleted'}
-                </p>
-              </div>
-              <i className='fa fa-pen-to-square mt-4'>
-                <i className='fa fa-trash ms-3'></i>
-              </i>
-            </div>
-          </div>
-        ))}
-      </div>
+    }
+
+    return(
+        <div className='card'>
+                <div className='card-body text-white' id='occupied'>
+                    <h4 className='card-title mt-2'>M</h4>
+                    <p id='carp' className='card-title' style={{Height:'90px', maxHeight:'90px', fontSize:'15px'}}>
+                        
+                    </p>
+                    <div id='bt' className='d-flex justify-content-between '>
+                        <div className='mt-2'>
+                            <label></label>
+                            <p id='con' className='bg-success'> </p>
+                        </div >
+                        <i className='fa fa-pen-to-square mt-4'><i className='fa fa-trash ms-3'></i></i>
+                    </div>
+                </div>
+        </div>
     );
-  };
+}
+// const OccupiedCard = () => {
+//     const { fetchTodo } = useForm();
+//     const U = localStorage.getItem("userid");
+//     const [tasklist, setTasklist] = useState([]);
+  
+//     useEffect(() => {
+//       async function fetch() {
+//         try {
+//           const response = await axios.get(`http://localhost:8080/user/task/all/${U}`);
+//           if (response.status === 200) {
+//             console.log("in the collection zone");
+//             console.log(response.data); 
+//             setTasklist(response.data);
+//             if (tasklist.length > 0 && fetchTodo) {
+//               fetchTodo();
+//             }
+//           }
+//         } catch (error) {
+//           console.log('error fetching task', error);
+//         }
+//       }
+  
+//       fetch(); 
+  
+//     }, []); // Added fetchTodo and U as dependencies
+  
+//     return (
+//       <div className='card'>
+//         {/* {tasklist.map((task) => (
+//           <div key={task.taskId} className='card-body text-white' id='occupied'>
+//             <h4 className='card-title mt-2'>{task.name}</h4>
+//             <p id='carp' className='card-title' style={{ height: '90px', maxHeight: '90px', fontSize: '15px' }}>
+//               {task.description}
+//             </p>
+//             <div id='bt' className='d-flex justify-content-between '>
+//               <div className='mt-2'>
+//                 <label>{task.date}</label>
+//                 <p id='con' className='bg-success'>
+//                   {task.completed ? 'Completed' : 'Incompleted'}
+//                 </p>
+//               </div>
+//               <i className='fa fa-pen-to-square mt-4'>
+//                 <i className='fa fa-trash ms-3'></i>
+//               </i>
+//             </div>
+//           </div>
+//         ))} */}
+//       </div>
+//     );
+//   };
 const NewCard =() => {
     const {openForm} = useForm();
     
@@ -236,6 +227,8 @@ const Overlay =() => {
 const Login =() => {
     const {userIn} = useForm();
     const [accountExit, setAccountExit] = useState(false);
+    const [accountNotExist, setAccountNotExis] = useState(false);
+    const [wrongPassword, setWrongPassword] = useState(false);
     const [signin, setSignin] = useState(false)
     const [signup, setSignup] = useState(true)
     const [valid, setValid] = useState(false)
@@ -250,10 +243,18 @@ const Login =() => {
     })
     const handleChange = (e) => {
         e.preventDefault();
-        setForm({
+        if(signin){
+            setLoginForm({
+                ...loginForm, 
+                [e.target.name]: e.target.value,
+            })
+        }else{
+           setForm({
             ...form,
             [e.target.name]: e.target.value
-        });
+        }); 
+        }
+        
     };
     const register = async  () => {
         try {
@@ -266,7 +267,7 @@ const Login =() => {
             }
             const response = await axios.post('http://localhost:8080/user/register', form);
             if (response.status === 200) {
-                localStorage.setItem("userid", response.data.userId);
+                localStorage.setItem("userid", response.data);
                 userIn()
             }
           } catch (error) {
@@ -278,14 +279,27 @@ const Login =() => {
           }
     };
 
-    const login = async () => {
-        const u = localStorage.getItem('userid')
-        console.log(u)
+    const login = async  () => {
         try{
-            const response = axios.get('http://localhost:8080/user/task/all/'+u)
-            console.log((await response).data)
-        }catch(error){
-            console.log(error)
+            const response = await  axios.post('http://localhost:8080/user/login', loginForm);
+            if(response.data === 200){
+                const u = loginForm.email;
+                localStorage.setItem('userid', u);
+                userIn();
+            }else if(response.data===302){
+                setWrongPassword(true)
+            setTimeout(()=>{
+                setWrongPassword(false)
+            },5000)
+            }else if(response.data===502){
+                setAccountNotExis(true)
+            setTimeout(()=>{
+                setAccountNotExis(false)
+            },5000)
+            }
+        }
+        catch(error){
+            console.log('Errors in react: '+error)
         }
 
     }
@@ -295,7 +309,9 @@ const Login =() => {
 
                 <h1 id='title'>{signup===true ? ('Sign Up') : ('Sign In')}</h1>
                 <h5 id='valid' style={valid ? {display: 'block'} : {}}>Please enter a valid details for proper registration</h5>
-                <h5 id='valid' style={accountExit ? {display: 'block'} : {}}>Account with {form.email} Already Exist</h5>
+                <h5 id='valid' style={accountExit ? {display: 'block'} : {}}>Account Already Exist</h5>
+                <h5 id='valid' style={wrongPassword ? {display: 'block'} : {}}>Incorrect password</h5>
+                <h5 id='valid' style={accountNotExist ? {display: 'block'} : {}}>Account does not exist</h5>
 
                 <div className='input-field' style={signin===true ? {maxHeight:0} : {}} >
                     <i className='fa fa-user'></i>
@@ -394,9 +410,9 @@ const FormForNewTask =(e) => {
             
         });
     };
-    const sendData =  (e)  =>  {
+    const sendData = async (e)  =>  {
         e.preventDefault();
-        axios.post(`http://localhost:8080/user/task/add/${u}`, formData)
+        await axios.post(`http://localhost:8080/user/task/add/${u}`, formData)
         .then(data => {
             console.log(data);
             if(data.status===200){
