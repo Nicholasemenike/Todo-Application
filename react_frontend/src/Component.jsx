@@ -16,8 +16,6 @@ const SideNavigation = () => {
     );
 };
 
-
-
 const Topdetails = () => {
     return(
         <div className='topdiv d-flex center mt-5 text-center'>
@@ -396,13 +394,21 @@ const FormForNewTask =(e) => {
     const currentTime = new Date();
     const u = localStorage.getItem('userid');
     const {closeForm, openSuccess} = useForm();
+    const [check, setCheck] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        time: currentTime.toISOString(),
-        important: '',
+        time: currentTime.toISOString().split('T')[0],
+        important: false,
         user: {u}
     })
+    const handleCheck = (event) => {
+        setCheck(event.target.checked);
+        setFormData({
+          ...formData,
+          important: event.target.checked,
+        });
+      };
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -412,6 +418,7 @@ const FormForNewTask =(e) => {
     };
     const sendData = async (e)  =>  {
         e.preventDefault();
+        console.log(formData)
         await axios.post(`http://localhost:8080/user/task/add/${u}`, formData)
         .then(data => {
             console.log(data);
@@ -468,7 +475,11 @@ const FormForNewTask =(e) => {
             <div id='impdiv'>
                 <div>
                     <label htmlFor='check' text='important' id='imp' className='text-black' >Important</label>
-                    <input className='ms-2 mt-1' id='check' name='important'  type='checkbox' value={formData.important}/>
+                    <input className='ms-2 mt-1' 
+                    id='check' 
+                    type='checkbox' 
+                    checked={check}
+                    onChange={handleCheck}/>
                 </div>
                 <div>
                     <button id='creat' onClick={sendData} className='' type='submit'><i className='fa fa-plus'></i> Create task</button>

@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from 'react';
 export const FormContext = createContext();
 
 export const FormProvider = ({children}) => {
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [showOverlay, setOverlay] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [home, setHome] = useState(true);
@@ -33,7 +33,7 @@ const openSuccess = () => {
     userIn()
     setOverlay(false)
     setSuccess(false)
-  },2000)
+  },1000)
 }
 
 const fetchTodo = () => {
