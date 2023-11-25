@@ -23,5 +23,4 @@ public class ApplicationConfiguration {
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .build();
     }
-
 }

@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping("task/all/{userid}")
-    public ResponseEntity<List<Task>> getAllTask(@PathVariable User userid) {
+    public ResponseEntity<List<Task>> getAllTask(@PathVariable String userid) {
         try{
             return userServiceImp.getAllTask(userid);
         }catch(Exception e){

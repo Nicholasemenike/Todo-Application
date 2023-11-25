@@ -56,9 +56,11 @@ public class UserServiceImp implements UserService {
         return taskRepository.getUndoneTask();
     }
 
-    public ResponseEntity<List<Task>>getAllTask(User id) {
+    public ResponseEntity<List<Task>> getAllTask(String id) {
         try{
-            return taskRepository.findtaskbyid(id);
+            User user = userRepository.findByEmail(id).get();
+            List<Task> tasks = taskRepository.findByUser(user);
+            return new ResponseEntity<>(tasks,HttpStatus.OK);
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -26,24 +26,23 @@ const Topdetails = () => {
 }
 
 const OccupiedCard = () => {
-    const {fetchTodo} = useForm()
-    const U = localStorage.getItem("userid")
+    const { fetchTodo } = useForm();
+    const U = localStorage.getItem("userid");
     const [tasklist, setTasklist] = useState([]);
-
-    useEffect(()=>{
-        loadTask();
-    },[])
+    
+    useEffect(() => {
+      loadTask();
+    }, []);
     
     const loadTask = async () => {
-        try{
-            const result = await axios.get('http://localhost:8080/user/task/all'+U)
-            .then(res => console.log(res))
-            setTasklist(result.data)
-            console.log(result)
-        }catch(error){
-            console.log('Error while load task :' +error)
-        }
-    }
+      try {
+        const response = await axios.get(`http://localhost:8080/user/task/all/${U}`);
+        console.log(response.data); // Check the data you receive
+        setTasklist(response.data);
+      } catch (error) {
+        console.log('Error while loading tasks:', error);
+      }
+    };    
 
     return(
         <div className='card'>
@@ -391,14 +390,13 @@ const MainBody= () => {
 };
 
 const FormForNewTask =(e) => {
-    const currentTime = new Date();
     const u = localStorage.getItem('userid');
     const {closeForm, openSuccess} = useForm();
     const [check, setCheck] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        time: currentTime.toISOString().split('T')[0],
+        time: '',
         important: false,
         user: {u}
     })
@@ -412,8 +410,7 @@ const FormForNewTask =(e) => {
     const handleChange = (e) => {
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
-            
+            [e.target.name]: e.target.value            
         });
     };
     const sendData = async (e)  =>  {
@@ -464,7 +461,7 @@ const FormForNewTask =(e) => {
             <label htmlFor='date' >Date</label>
             <input 
             id='date' 
-            name='date' 
+            name='time' 
             className='form-control mb-0' 
             type='date' 
             required 
